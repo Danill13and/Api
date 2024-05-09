@@ -43,6 +43,6 @@ Product.belongsTo(Category)
 
 
 sequelizer.authenticate()
-// sequelizer.sync()
+sequelizer.sync()
 
 module.exports = Product
