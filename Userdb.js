@@ -33,6 +33,6 @@ const User = sequelizer.define("User", {
 })
 
 sequelizer.authenticate()
-// sequelizer.sync()
+sequelizer.sync()
 
 module.exports = User
