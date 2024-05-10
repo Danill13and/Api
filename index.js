@@ -80,8 +80,8 @@ router.post('/deleteProduct', async (req, res) =>{
     res.send(data)
 })
 
-router.post('/getProduct', async (req, res) =>{
-    const prod = await Product.findOne({ where:{user_id: req.body.user_id}}) 
+router.get('/getProduct', async (req, res) =>{
+    const prod = await Product.findOne({ where:{user_id: req.headers['user']}}) 
     res.send(prod)
 })
 
