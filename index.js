@@ -81,8 +81,8 @@ router.post('/deleteProduct', async (req, res) =>{
 })
 
 router.post('/getProduct', async (req, res) =>{
-    const user = await User.findOne({ where:{id: req.body.id}}) 
-    res.send(user)
+    const prod = await Product.findOne({ where:{user_id: req.body.user_id}}) 
+    res.send(prod)
 })
 
 router.post('/order', async (req, res) =>{
