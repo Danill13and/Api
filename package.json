@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "audit": "^0.0.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "sequelize": "^6.37.3",
+    "sequelizer": "^1.1.4",
+    "telegraf": "^4.16.3",
+    "uuid": "^9.0.1"
+  }
+}
