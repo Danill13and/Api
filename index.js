@@ -52,15 +52,14 @@ router.get('/allUser', async (req, res) => {
 }) 
 
 router.post('/login', async (req, res) => {
-    if (req.body.name === undefined){
+    if (req.body.name === undefined || req.body.name === " " || req.body.name === ""){
         res.json({error: "name is required"})
     }
-    if (req.body.password === undefined){
+    if (req.body.password === undefined || req.body.password === " " || req.body.password === ""){
         res.json({error: "password is required"})
-    }else{
+    }
     const user = await User.findOne({ where:{name: req.body.name, password: req.body.password}}) 
     res.send(user)
-    }
 })
 
 router.get('/getUserByApiKey', async (req, res) => {
