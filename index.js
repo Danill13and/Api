@@ -10,9 +10,12 @@ const router = express()
 router.use(express.json());
 router.use(express.urlencoded({ extended: true })); 
 router.use(cors())
-header("Access-Control-Allow-Origin", "*");
-header("Access-Control-Allow-Headers", "GET, HEAD, OPTIONS, POST, PUT, DELETE");
-header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+router.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "GET, HEAD, OPTIONS, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    
+})
 const bot = new Telegraf("7095240988:AAHyddb5dKkVoAw26I6LO6qkVjHfkgUA63I")
 
 router.post('/createUser', async (req, res) => {
