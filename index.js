@@ -31,7 +31,7 @@ router.use(function(req, res, next) {
 //   res.json({msg: 'This is CORS-enabled for an allowed domain.'})
 // })
   
-app.use(
+router.use(
     cors({
     origin: "*", // Explicitly specify the allowed origin
     credentials: true, // Important for cookies, authorization headers with HTTPS
