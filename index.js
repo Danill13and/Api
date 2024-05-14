@@ -16,6 +16,36 @@ router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 })
+
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//       // db.loadOrigins is an example call to load
+//       // a list of origins from a backing database
+//       db.loadOrigins(function (error, origins) {
+//         callback(error, origins)
+//       })
+//     }
+//   }
+  
+// router.get('/products/:id', cors(corsOptions), function (req, res, next) {
+//   res.json({msg: 'This is CORS-enabled for an allowed domain.'})
+// })
+  
+app.use(
+    cors({
+    origin: "*", // Explicitly specify the allowed origin
+    credentials: true, // Important for cookies, authorization headers with HTTPS
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+    "Origin",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+    "X-Request-With",
+    ],
+    })
+    );
+
 const bot = new Telegraf("7095240988:AAHyddb5dKkVoAw26I6LO6qkVjHfkgUA63I")
 
 router.post('/createUser', async (req, res) => {
@@ -128,4 +158,8 @@ router.post('/order', async (req, res) =>{
     res.send("Good")
 })
 
-router.listen()
+// router.listen(80, function () {
+//     console.log('CORS-enabled web server listening on port 80')
+// })
+
+router.listen(3000)
