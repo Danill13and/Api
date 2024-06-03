@@ -10,36 +10,65 @@ const router = express()
 router.use(express.json());
 router.use(express.urlencoded({ extended: true })); 
 router.use(cors())
-router.use(function(req, res, next) {
+router.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "GET, HEAD, OPTIONS, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-})
+});
+
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//       // db.loadOrigins is an example call to load
+//       // a list of origins from a backing database
+//       db.loadOrigins(function (error, origins) {
+//         callback(error, origins)
+//       })
+//     }
+//   }
+  
+// router.get('/products/:id', cors(corsOptions), function (req, res, next) {
+//   res.json({msg: 'This is CORS-enabled for an allowed domain.'})
+// })
+  
+router.use(
+    cors({
+    origin: "*", // Explicitly specify the allowed origin
+    credentials: true, // Important for cookies, authorization headers with HTTPS
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+    "Origin",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+    "X-Request-With",
+    ],
+    })
+    );
+
 const bot = new Telegraf("7095240988:AAHyddb5dKkVoAw26I6LO6qkVjHfkgUA63I")
 
 router.post('/createUser', async (req, res) => {
     const apiKey = uuidv4();
     if (req.body.name === undefined){
-        res.json({error: "name is required"})
+        return res.json({error: "name is required"})
     }
     if (req.body.email === undefined){
-        res.json({error: "email is required"})
+        return res.json({error: "email is required"})
     }
     if (req.body.password === undefined){
-        res.json({error: "password is required"})
+        return res.json({error: "password is required"})
     }
     if (req.body.reapit_password === undefined){
-        res.json({error: "reapit password is required"})
+        return res.json({error: "reapit password is required"})
     }
     if (req.body.phone === undefined){
-        res.json({error: "phone is required"})
+        return res.json({error: "phone is required"})
     }
     if (length(req.body.phone) < 10){
-        res.json({error: "phone is not valid"})
+        return res.json({error: "phone is not valid"})
     }
     if (req.body.password!== req.body.reapit_password){
-        res.json({error: "password and reapit password is not same"})
+        return res.json({error: "password and reapit password is not same"})
     }
     data = await User.create({name: `${req.body.name}`, password: `${req.body.password}`, email: `${req.body.email}`, phone: `${req.body.phone}`, api_key: apiKey})
     data.save()
@@ -53,10 +82,10 @@ router.get('/allUser', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     if (req.body.name === undefined || req.body.name === " " || req.body.name === ""){
-        res.json({error: "name is required"})
+        return res.json({error: "name is required"})
     }
     if (req.body.password === undefined || req.body.password === " " || req.body.password === ""){
-        res.json({error: "password is required"})
+        return res.json({error: "password is required"})
     }
     const user = await User.findOne({ where:{name: req.body.name, password: req.body.password}}) 
     res.send(user)
@@ -90,18 +119,18 @@ router.post('/getCategory', async (req, res) => {
 router.post('/createProduct', async (req, res) =>{
     const user = await User.findOne({ where:{api_key: req.headers['api-key']}})
     if (req.body.category_main_id === undefined){
-        res.json({error: "name of category is required"})
+        return res.json({error: "name of category is required"})
     }
     const category = await Category.findOne({where:{name: req.body.category_main_id}})
     console.log(category.id)
     if(req.body.name === undefined){
-        res.json({error: "name of product is required"})
+        return res.json({error: "name of product is required"})
     }
     if(req.body.price === undefined){
-        res.json({error: "price of product is required"})
+        return res.json({error: "price of product is required"})
     }
     if(req.body.description === undefined){
-        res.json({error: "description of product is required"})
+        return res.json({error: "description of product is required"})
     }
     const data = await Product.build({name: `${req.body.name}`, price: req.body.price, description: `${req.body.description}`, category_id: category.id, user_id: user.id, image: `${req.body.image}`})
     await data.save()
@@ -127,5 +156,9 @@ router.post('/order', async (req, res) =>{
     bot.telegram.sendMessage(1252114085, `Нове замовленя на адрес: ${req.body.adress}`)
     res.send("Good")
 })
+
+// router.listen(80, function () {
+//     console.log('CORS-enabled web server listening on port 80')
+// })
 
 router.listen(8000)
